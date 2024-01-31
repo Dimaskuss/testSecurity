@@ -3,19 +3,23 @@ package com.example.testsecurity.service;
 import com.example.testsecurity.entity.UserEntity;
 import com.example.testsecurity.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@Builder
+@RequiredArgsConstructor
 public class UserService {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
-    public void saveUser(UserEntity userEntity){
-        userEntity.setPassword(encoder().encode(userEntity.getPassword()));
+     private final BCryptPasswordEncoder passwordEncoder;
+
+
+
+    public void saveUser(UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userRepository.save(userEntity);
     }
 }
