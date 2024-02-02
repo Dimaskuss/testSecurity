@@ -1,8 +1,8 @@
 package com.example.testsecurity.service;
 
+import com.example.testsecurity.dto.UserEntityRequestDto;
 import com.example.testsecurity.entity.UserEntity;
 import com.example.testsecurity.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,4 +28,14 @@ public class UserService {
     public List<UserEntity> getAll() {
         return userRepository.findAll();
     }
+    public UserEntity getUserEntity(Long id){
+        return userRepository.findFirstById(id);
+//        return UserEntityRequestDto.builder().name(userEntity.getName()).email(userEntity.getEmail()).build();
+    }
+
+    public void deleteUserEntity(Long id) {
+        userRepository.deleteById(id);
+    }
+
+
 }

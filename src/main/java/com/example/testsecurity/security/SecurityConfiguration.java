@@ -1,13 +1,9 @@
 package com.example.testsecurity.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,12 +31,32 @@ public class SecurityConfiguration {
         return auth;
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(("/registration")).permitAll()
-                        .anyRequest().authenticated())
-                .formLogin((form) -> form.loginPage("/login").permitAll()).logout((logout) -> logout.permitAll());
+        http
+                .authorizeRequests(authorizeRequests ->
+                        authorizeRequests
+                                .dispatcherTypeMatchers(HttpMethod.valueOf("/registration")).permitAll()
+                                .anyRequest().authenticated()
+
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login").permitAll()
+                )
+                .logout(logout ->
+                        logout
+                                .permitAll()
+    //                )
+//                .csrf(csrf ->
+//                        csrf
+//                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Используем ваш репозиторий токена CSRF
+                );
+
         return http.build();
     }
+
+
 }
+
